@@ -58,6 +58,7 @@ func _on_body_entered(body: BasicCreator) -> void:
 		body_direction.y = body_direction.y - (color_power * color.b) 
 	body.velocity = body.velocity + body_direction
 	body.color += color
+	body.last_player_id_hit = player_id
 
 func start_timer() -> void:
 	if !color.a:

@@ -27,15 +27,13 @@ func _enter_tree() -> void:
 func _physics_process(delta: float) -> void:
 	super._physics_process(delta)
 	if is_multiplayer_authority():
-		camera_2d.visible = true
 		camera_2d.make_current()
 		_handle_input(delta)
 	move_and_slide()
 	
-func _process(delta: float) -> void:
-	label.text = str(player_id)
+func _process(_delta: float) -> void:
+	label.text = str(kill_count)
 	
-var shown = false
 func _handle_input(delta) -> void:
 	var input_direction = Vector2.ZERO
 	var shoot_power = 1
@@ -89,6 +87,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
 		handle_click(event)
 		
-func handle_click(event : InputEventMouseButton):
+func handle_click(_event : InputEventMouseButton):
 	var target = get_global_mouse_position()
 	shoot_projectile.rpc(target, player_id)

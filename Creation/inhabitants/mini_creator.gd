@@ -7,6 +7,7 @@ class_name BasicCreator
 @export var config_growth: float = 0.1
 @export var speed: float = 10000.0
 @export var kill_count = 1
+var last_player_id_hit : int = 0
 
 signal creator_died(creator : BasicCreator)
 var being_pused = false
