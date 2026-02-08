@@ -5,10 +5,12 @@ class_name BasicCreator
 @export var white_creator: Sprite2D
 @export var config : Color
 @export var config_growth: float = 0.1
-@export var speed: float = 50000.0
+@export var speed: float = 10000.0
+@export var kill_count = 1
 
 signal creator_died(creator : BasicCreator)
 var being_pused = false
+var direction : Vector2
 const WHITE_CREATOR = preload("res://Art/white_creator.png")
 const BASIC_COLOR = preload("res://Creation/BasicColor.tscn")
 
@@ -42,25 +44,22 @@ func init_creator() -> void:
 	death_range.body_entered.connect(Callable(self, '_on_death_range_body_entered'))
 	self.add_child(death_range)
 	death_range.add_child(death_shape)
-	config = Color(0.1,0.1,0.1,0.1)
+	increase_config('r', 1)
 	color = Color(0,0,0,0)
 
 func _physics_process(delta: float) -> void:
 	if !white_creator:
 		return
-	color.r = clamp(color.r + (0.1 * delta), 0, 1)
-	color.g = clamp(color.g + (0.1 * delta), 0, 1)
-	color.b = clamp(color.b + (0.1 * delta), 0, 1)
-	color.a = clamp(color.a + (0.1 * delta), 0, 1)
-	white_creator.modulate = color	
+	color.r = clamp(color.r + (0.1 * delta * kill_count), 0, 1)
+	color.g = clamp(color.g + (0.1 * delta * kill_count), 0, 1)
+	color.b = clamp(color.b + (0.1 * delta * kill_count), 0, 1)
+	color.a = clamp(color.a + (0.3 * delta * kill_count), 0, 1)
+	white_creator.modulate = color
 	move_and_slide()
 
-	
-func increase_config(what: String, value : float) -> void :
-	if config[what] >= 1:
-		config[what] = 0.1
-		return
-	config[what] = config[what] + value
+func increase_config(what: String, shoot_power : int) -> void :
+	config = Color(0, 0, 0, config_growth * shoot_power)
+	config[what] = config_growth * shoot_power
 	
 func get_clamp_config() -> Color :
 	var to_return = Color(0,0,0,0)
@@ -71,22 +70,19 @@ func get_clamp_config() -> Color :
 	return to_return 
 	
 func can_shoot() -> bool:
-	if (
-		color.r < config_growth and 
-		color.g < config_growth and 
-		color.b < config_growth and 
-		color.a < config_growth
-	):
-		return false
+	var target = color * config * 10
+	if target.r + target.g + target.b < config_growth:
+		return false; 
 	return true
-	
-func shoot_projectile(target : Vector2) -> void:
+
+@rpc('call_local')
+func shoot_projectile(target : Vector2, player_id : int) -> void:
 	var instance : BasicColor = BASIC_COLOR.instantiate()
 	if !can_shoot():
 		return
 	instance.target = target
 	instance.color = get_clamp_config()
-	instance.creator = self
+	instance.player_id = player_id
 	instance.global_position = global_position + (target - global_position).normalized() * 55
 	get_tree().root.add_child(instance)
 	

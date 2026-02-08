@@ -1,14 +1,13 @@
-@tool
 extends RigidBody2D
 class_name BasicColor
 
 const WHITE_CREATOR = preload("res://Art/white_creator.png")
 @export var color : Color = Color(1,1,1,1)
-var color_power := 200.0
+var color_power := 5000.0
 @onready var timer: Timer = $Timer
 @export var target : Vector2
 @export var speed : float = 500.0
-@export var creator : BasicCreator
+@export var player_id : int
 var sprite : Sprite2D
 
 func _ready() -> void:
@@ -17,12 +16,11 @@ func _ready() -> void:
 	sprite.scale.y = 0.5
 	sprite.texture = WHITE_CREATOR
 	self.add_child(sprite)
-	sprite.modulate = color
+	sprite.modulate = Color(color.r * 10, color.g * 10, color.b * 10, 1) 
 	call_deferred("_set_up")
 
 var target_reached = false
 func _physics_process(delta: float) -> void:
-	sprite.modulate = color
 	if !target or target_reached:
 		return
 	var direction = (target - global_position).normalized()
@@ -48,10 +46,17 @@ func _set_up() -> void:
 
 func _on_body_entered(body: BasicCreator) -> void:
 	body.push(color.a * 0.5)
-	body.velocity.x = body.velocity.x + (color_power * color.r) 
-	body.velocity.x = body.velocity.x + (color_power * 0.5 * color.g) 
-	body.velocity.y = body.velocity.y + (color_power * 0.5 * color.g) 
-	body.velocity.y = body.velocity.y + (color_power * color.b) 
+	var body_direction = body.direction
+	var up_factor = -1 if body_direction.y < 0 else 1
+	if color.r:
+		body_direction.x = body_direction.x + (color_power * color.r) 
+		body_direction.y = body_direction.y - (color_power * color.r) 
+	if color.g:
+		body_direction.y = body_direction.y + (up_factor * color_power * color.g * 2) 
+	if color.b:
+		body_direction.x = body_direction.x - (color_power * color.b) 
+		body_direction.y = body_direction.y - (color_power * color.b) 
+	body.velocity = body.velocity + body_direction
 	body.color += color
 
 func start_timer() -> void:

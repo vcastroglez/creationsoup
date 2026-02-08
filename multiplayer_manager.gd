@@ -8,7 +8,7 @@ signal player_connected(id: int)
 
 #region Host
 func become_host() -> void:
-	peer.create_server(8086)
+	peer.create_server(Env.env('PORT').to_int())
 	multiplayer.multiplayer_peer = peer
 	
 	multiplayer.peer_connected.connect(_add_player_to_game)
@@ -31,6 +31,9 @@ func _del_player(id: int) -> void:
 
 #region Client
 func join() -> void:
-	peer.create_client(Env.env('HOST'), 8086)
+	peer.create_client(Env.env('HOST'), Env.env('PORT').to_int())
 	multiplayer.multiplayer_peer = peer
+	multiplayer.server_disconnected.connect(_server_disconnected)
+func _server_disconnected():
+	get_tree().reload_current_scene()
 #endregion

@@ -25,6 +25,7 @@ func _enter_tree() -> void:
 	init_creator.call_deferred()
 	
 func _physics_process(delta: float) -> void:
+	super._physics_process(delta)
 	if is_multiplayer_authority():
 		camera_2d.visible = true
 		camera_2d.make_current()
@@ -37,10 +38,11 @@ func _process(delta: float) -> void:
 var shown = false
 func _handle_input(delta) -> void:
 	var input_direction = Vector2.ZERO
+	var shoot_power = 1
 	if  Input.is_action_pressed('shift'):
-		config_growth = 0.2
+		shoot_power = 2
 	else:
-		config_growth = 0.1
+		shoot_power = 1
 		
 	if Input.is_action_just_pressed("dash") and dash_factor == 1 :
 		dash_factor += DASH_FACTOR
@@ -48,19 +50,20 @@ func _handle_input(delta) -> void:
 		dash_factor -= DASH_FACTOR * 0.1
 		
 	if Input.is_action_just_pressed("R") :
-		increase_config('r', config_growth)
+		increase_config('r', shoot_power)
 		
 	if Input.is_action_just_pressed("G") :
-		increase_config('g', config_growth)
+		increase_config('g', shoot_power)
 		
 	if Input.is_action_just_pressed("B") :
-		increase_config('b', config_growth)
+		increase_config('b', shoot_power)
 		
 	if Input.is_action_just_pressed("A") :
-		increase_config('a', config_growth)
+		increase_config('a', shoot_power)
 
 	#clamp_config()
 	input_direction = Input.get_vector("left", "right", "up", "down")
+	direction = input_direction if input_direction != Vector2.ZERO else direction
 
 	if !being_pused and (input_direction.x != 0 or input_direction.y != 0) :
 		velocity = input_direction * speed * dash_factor * delta
@@ -71,7 +74,6 @@ func _handle_input(delta) -> void:
 	gconfig.text = str(round(config.g * 100))
 	bconfig.text = str(round(config.b * 100))
 	aconfig.text = str(round(config.a * 100))
-	
 	update_labels()
 	
 func update_labels() -> void:
@@ -89,4 +91,4 @@ func _unhandled_input(event: InputEvent) -> void:
 		
 func handle_click(event : InputEventMouseButton):
 	var target = get_global_mouse_position()
-	shoot_projectile(target)
+	shoot_projectile.rpc(target, player_id)
