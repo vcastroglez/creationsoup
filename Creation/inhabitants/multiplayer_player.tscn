@@ -1,0 +1,115 @@
+[gd_scene load_steps=7 format=3 uid="uid://bfg6by6gsvysx"]
+
+[ext_resource type="Script" path="res://Creation/inhabitants/multiplayer_player.gd" id="1_hln5a"]
+[ext_resource type="Texture2D" uid="uid://c3wr4ew885ysa" path="res://Art/white_creator.png" id="2_tfput"]
+[ext_resource type="LabelSettings" uid="uid://f7je24vrwxfs" path="res://Creation/black_font.tres" id="3_eempv"]
+[ext_resource type="LabelSettings" uid="uid://c5oorjqg05hui" path="res://Creation/white_font.tres" id="4_5fvwc"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_r8cxf"]
+radius = 24.0
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_gauo3"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="MultiplayerPlayer" type="CharacterBody2D"]
+script = ExtResource("1_hln5a")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_r8cxf")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+visible = false
+
+[node name="Label" type="Label" parent="."]
+offset_left = -20.0
+offset_top = -12.0
+offset_right = 20.0
+offset_bottom = 11.0
+text = "#111"
+
+[node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_gauo3")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="RSprite" type="Sprite2D" parent="CanvasLayer"]
+modulate = Color(1, 0, 0, 1)
+position = Vector2(40, 608)
+texture = ExtResource("2_tfput")
+
+[node name="Label" type="Label" parent="CanvasLayer/RSprite"]
+offset_left = -11.0
+offset_top = -1.0
+offset_right = 29.0
+offset_bottom = 22.0
+text = "0.1"
+label_settings = ExtResource("3_eempv")
+
+[node name="config" type="Label" parent="CanvasLayer/RSprite"]
+offset_left = -11.0
+offset_top = -23.0
+offset_right = 29.0
+text = "0.1"
+label_settings = ExtResource("3_eempv")
+
+[node name="GSprite" type="Sprite2D" parent="CanvasLayer"]
+modulate = Color(0, 1, 0, 1)
+position = Vector2(112, 608)
+texture = ExtResource("2_tfput")
+
+[node name="Label" type="Label" parent="CanvasLayer/GSprite"]
+offset_left = -11.0
+offset_top = -2.0
+offset_right = 29.0
+offset_bottom = 21.0
+text = "0.1"
+label_settings = ExtResource("3_eempv")
+
+[node name="config" type="Label" parent="CanvasLayer/GSprite"]
+offset_left = -11.0
+offset_top = -23.0
+offset_right = 29.0
+text = "0.1"
+label_settings = ExtResource("3_eempv")
+
+[node name="BSprite" type="Sprite2D" parent="CanvasLayer"]
+modulate = Color(0, 0, 1, 1)
+position = Vector2(184, 608)
+texture = ExtResource("2_tfput")
+
+[node name="Label" type="Label" parent="CanvasLayer/BSprite"]
+offset_left = -11.0
+offset_top = -2.0
+offset_right = 29.0
+offset_bottom = 21.0
+text = "0.1"
+label_settings = ExtResource("3_eempv")
+
+[node name="config" type="Label" parent="CanvasLayer/BSprite"]
+offset_left = -11.0
+offset_top = -23.0
+offset_right = 29.0
+text = "0.1"
+label_settings = ExtResource("3_eempv")
+
+[node name="ASprite" type="Sprite2D" parent="CanvasLayer"]
+self_modulate = Color(0, 0, 0, 1)
+position = Vector2(256, 608)
+texture = ExtResource("2_tfput")
+
+[node name="Label" type="Label" parent="CanvasLayer/ASprite"]
+offset_left = -11.0
+offset_top = -3.0
+offset_right = 29.0
+offset_bottom = 20.0
+text = "0.1"
+label_settings = ExtResource("4_5fvwc")
+
+[node name="config" type="Label" parent="CanvasLayer/ASprite"]
+offset_left = -11.0
+offset_top = -23.0
+offset_right = 29.0
+text = "0.1"
+label_settings = ExtResource("4_5fvwc")

@@ -1,0 +1,36 @@
+extends Node
+
+var multiplayer_scene = preload("res://Creation/inhabitants/multiplayer_player.tscn")
+var peer = ENetMultiplayerPeer.new()
+signal player_connected(id: int)
+@onready var players: Node = $"../Players"
+@onready var empty_space: EmptySpace = $".."
+
+#region Host
+func become_host() -> void:
+	peer.create_server(8086)
+	multiplayer.multiplayer_peer = peer
+	
+	multiplayer.peer_connected.connect(_add_player_to_game)
+	multiplayer.peer_disconnected.connect(_del_player)
+	_add_player_to_game(get_multiplayer_authority())
+	
+func _add_player_to_game(id: int) -> void:
+	var player_to_add : MultiplayerPlayer = multiplayer_scene.instantiate()
+	player_to_add.name = str(id)
+	player_to_add.player_id = id
+	
+	players.add_child.call_deferred(player_to_add, true)
+	empty_space.player_connected.call_deferred(id)
+	
+func _del_player(id: int) -> void:
+	if not players.has_node(str(id)):
+		return
+	players.get_node(str(id)).queue_free()
+#endregion
+
+#region Client
+func join() -> void:
+	peer.create_client(Env.env('HOST'), 8086)
+	multiplayer.multiplayer_peer = peer
+#endregion

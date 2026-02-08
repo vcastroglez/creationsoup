@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://418xjmcbkm0n"]
+
+[ext_resource type="Script" path="res://Creation/basic_color.gd" id="1_ysbto"]
+[ext_resource type="Texture2D" uid="uid://c3wr4ew885ysa" path="res://Art/white_creator.png" id="2_ir7ra"]
+
+[node name="BasicColor" type="RigidBody2D"]
+z_index = 1
+mass = 0.001
+gravity_scale = 0.0
+script = ExtResource("1_ysbto")
+color = Color(0, 0, 0, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+z_index = -1
+scale = Vector2(0.715042, 0.715042)
+texture = ExtResource("2_ir7ra")
+
+[node name="Timer" type="Timer" parent="."]
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
