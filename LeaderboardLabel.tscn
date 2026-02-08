@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://d0dygxsqnvjv0"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_4rp8x"]
+font_size = 17
+font_color = Color(0, 0, 0, 1)
+outline_size = 3
+
+[node name="Label" type="Label"]
+text = "asdasd"
+label_settings = SubResource("LabelSettings_4rp8x")

@@ -26,7 +26,6 @@ class_name Map
 		notify_property_list_changed()
 		
 var noise : FastNoiseLite = FastNoiseLite.new()
-@onready var texture_rect: TextureRect = $CanvasLayer/TextureRect
 
 func _ready() -> void :
 	generate_map()
@@ -88,7 +87,4 @@ func generate_noise() -> void :
 	texture.height = map_height
 	texture.normalize = false
 	texture.noise = noise
-	
-	if texture_rect:
-		texture_rect.texture = texture
 	

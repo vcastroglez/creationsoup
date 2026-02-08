@@ -4,12 +4,14 @@ class_name EmptySpace
 @onready var walkable: TileMapLayer = $Map/walkable
 @onready var players: Node = $Players
 @onready var MultiplayerManager: Node = $Node
-
 func _ready() -> void :
 	MultiplayerManager.player_connected.connect(Callable(self, 'player_connected'))
 	
 func player_connected(id: int) -> void:
 	place_creator.rpc(id)
+
+func _process(delta: float) -> void:
+	pass
 	
 func _on_creator_death(creator: MultiplayerPlayer) -> void:
 	print(creator.last_player_id_hit)
@@ -35,3 +37,4 @@ func place_creator(id: int) -> void:
 		creator.kill_count = 1
 		creator.increase_config('r', 1)
 		creator.creator_died.connect(Callable(self, '_on_creator_death'))
+	

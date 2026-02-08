@@ -1,15 +1,10 @@
 extends Node
-
+class_name MultiplayerManager
 var multiplayer_scene = preload("res://Creation/inhabitants/multiplayer_player.tscn")
 signal player_connected(id: int)
+
 @onready var players: Node = $"../Players"
 @onready var empty_space: EmptySpace = $".."
-
-const HOST = 'capj.dl.cl'
-const PROTOCOL = 'wss'
-#const HOST = 'localhost'
-#const PROTOCOL = 'ws'
-const PORT = 8088
 
 func _ready() -> void:
 	if OS.has_feature("dedicated_server"):
@@ -19,7 +14,7 @@ func _ready() -> void:
 #region Host
 func become_host() -> void:
 	var peer = WebSocketMultiplayerPeer.new()
-	peer.create_server(PORT, "127.0.0.1")
+	peer.create_server(8088, "127.0.0.1")
 	multiplayer.multiplayer_peer = peer
 	
 	multiplayer.peer_connected.connect(_add_player_to_game)
@@ -41,9 +36,11 @@ func _del_player(id: int) -> void:
 #endregion
 
 #region Client
-func join() -> void:
+func join(nickname : String = 'Unknown_player') -> void:
 	var peer = WebSocketMultiplayerPeer.new()
 	peer.create_client('wss://capj.dl.cl/site/creationsoup')
+	#peer.create_client('ws://localhost:8086')
+
 	multiplayer.multiplayer_peer = peer
 	multiplayer.server_disconnected.connect(_server_disconnected)
 func _server_disconnected():

@@ -10,6 +10,7 @@ class_name BasicCreator
 var last_player_id_hit : int = 0
 
 signal creator_died(creator : BasicCreator)
+signal nickname_picked(id: int, nickname : String)
 var being_pused = false
 var direction : Vector2
 const WHITE_CREATOR = preload("res://Art/white_creator.png")

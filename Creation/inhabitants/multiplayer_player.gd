@@ -16,6 +16,14 @@ const DASH_FACTOR : float = 5
 @onready var bconfig: Label = $CanvasLayer/BSprite/config
 @onready var aconfig: Label = $CanvasLayer/ASprite/config
 
+@onready var color_rect: ColorRect = $CanvasLayer/ColorRect
+@onready var text_edit: TextEdit = $CanvasLayer/ColorRect/TextEdit
+@onready var button: Button = $CanvasLayer/ColorRect/Button
+
+const LEADERBOARD_LABEL = preload("res://LeaderboardLabel.tscn")
+@onready var v_box_container: VBoxContainer = $CanvasLayer/Leaderboard/VBoxContainer
+
+@export var nickname : String
 var dash_factor = 1
 
 @export var player_id : int
@@ -23,16 +31,30 @@ var dash_factor = 1
 func _enter_tree() -> void:
 	set_multiplayer_authority(name.to_int())
 	init_creator.call_deferred()
-	
+
+func handle_leaderboard():
+	for player : MultiplayerPlayer in get_parent().get_children():
+		var player_id = str(player.player_id)
+		var label = v_box_container.get_node(player_id)
+		if !label:
+			label = LEADERBOARD_LABEL.instantiate()
+			label.name = player_id
+			v_box_container.add_child(label)
+		label.text = str(player.kill_count) + ' - ' + player.nickname
+		
 func _physics_process(delta: float) -> void:
 	super._physics_process(delta)
 	if is_multiplayer_authority():
 		camera_2d.make_current()
 		_handle_input(delta)
+	else:
+		color_rect.visible = false
 	move_and_slide()
 	
 func _process(_delta: float) -> void:
 	label.text = str(kill_count)
+	button.disabled = !text_edit.text
+	#handle_leaderboard()
 	
 func _handle_input(delta) -> void:
 	var input_direction = Vector2.ZERO
@@ -90,3 +112,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func handle_click(_event : InputEventMouseButton):
 	var target = get_global_mouse_position()
 	shoot_projectile.rpc(target, player_id)
+
+func _on_button_pressed() -> void:
+	nickname = text_edit.text
+	color_rect.visible = false

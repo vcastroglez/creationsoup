@@ -1,9 +1,13 @@
-[gd_scene load_steps=7 format=3 uid="uid://bfg6by6gsvysx"]
+[gd_scene load_steps=8 format=3 uid="uid://bfg6by6gsvysx"]
 
 [ext_resource type="Script" path="res://Creation/inhabitants/multiplayer_player.gd" id="1_hln5a"]
 [ext_resource type="Texture2D" uid="uid://c3wr4ew885ysa" path="res://Art/white_creator.png" id="2_tfput"]
 [ext_resource type="LabelSettings" uid="uid://f7je24vrwxfs" path="res://Creation/black_font.tres" id="3_eempv"]
 [ext_resource type="LabelSettings" uid="uid://c5oorjqg05hui" path="res://Creation/white_font.tres" id="4_5fvwc"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_6a1dp"]
+outline_size = 5
+outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_r8cxf"]
 radius = 24.0
@@ -15,9 +19,25 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath(".:color")
 properties/1/spawn = true
 properties/1/replication_mode = 1
+properties/2/path = NodePath(".:nickname")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:kill_count")
+properties/3/spawn = true
+properties/3/replication_mode = 1
 
 [node name="MultiplayerPlayer" type="CharacterBody2D"]
 script = ExtResource("1_hln5a")
+
+[node name="Label" type="Label" parent="."]
+z_index = 5
+offset_left = -41.0
+offset_top = -12.0
+offset_right = 42.0
+offset_bottom = 21.0
+text = "1"
+label_settings = SubResource("LabelSettings_6a1dp")
+horizontal_alignment = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_r8cxf")
@@ -27,14 +47,6 @@ zoom = Vector2(0.5, 0.5)
 
 [node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_gauo3")
-
-[node name="Label" type="Label" parent="."]
-offset_left = -41.0
-offset_top = -12.0
-offset_right = 42.0
-offset_bottom = 21.0
-text = "1"
-horizontal_alignment = 1
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -117,3 +129,55 @@ offset_top = -23.0
 offset_right = 29.0
 text = "0.1"
 label_settings = ExtResource("4_5fvwc")
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.485703, 0.485704, 0.485703, 1)
+
+[node name="TextEdit" type="TextEdit" parent="CanvasLayer/ColorRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -103.5
+offset_top = -18.5
+offset_right = 103.5
+offset_bottom = 18.5
+grow_horizontal = 2
+grow_vertical = 2
+placeholder_text = "Enter Nickname"
+
+[node name="Button" type="Button" parent="CanvasLayer/ColorRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -22.0
+offset_top = 27.5
+offset_right = 22.0
+offset_bottom = 58.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Save"
+
+[node name="Leaderboard" type="ColorRect" parent="CanvasLayer"]
+offset_left = 1007.0
+offset_top = 3.0
+offset_right = 1145.0
+offset_bottom = 225.0
+color = Color(0.4, 0.4, 0.4, 0.411765)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Leaderboard"]
+layout_mode = 0
+offset_right = 144.0
+offset_bottom = 329.0
+
+[connection signal="pressed" from="CanvasLayer/ColorRect/Button" to="." method="_on_button_pressed"]
