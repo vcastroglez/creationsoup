@@ -19,7 +19,7 @@ func _ready() -> void:
 #region Host
 func become_host() -> void:
 	var peer = WebSocketMultiplayerPeer.new()
-	peer.create_server(PORT)
+	peer.create_server(PORT, "127.0.0.1")
 	multiplayer.multiplayer_peer = peer
 	
 	multiplayer.peer_connected.connect(_add_player_to_game)
